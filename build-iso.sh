@@ -2,11 +2,25 @@
 # Builds oneshell.iso: boots straight into the phone shell (./shell/index.html)
 # Run on a Debian/Ubuntu machine:  sudo ./build-iso.sh   (needs internet, ~3GB disk)
 # Test:  ./run-qemu.sh
-set -e
-apt-get install -y live-build
+set -euo pipefail
+
+export DEBIAN_FRONTEND=noninteractive
+
+sudo apt-get update
+sudo apt-get install -y --no-install-recommends live-build debootstrap debian-archive-keyring
+
 rm -rf build && mkdir build && cd build
-lb config --distribution bookworm --architectures amd64 --binary-images iso-hybrid \
-  --bootappend-live "boot=live quiet splash" --debian-installer none
+
+lb config \
+  --distribution bookworm \
+  --architectures amd64 \
+  --binary-images iso-hybrid \
+  --mirror http://deb.debian.org/debian \
+  --security-mirror http://deb.debian.org/debian-security \
+  --archive-areas "main contrib non-free-firmware" \
+  --bootappend-live "boot=live quiet splash" \
+  --debian-installer none
+
 echo "linux-image-amd64 live-boot systemd-sysv cage chromium seatd fonts-roboto fonts-noto-color-emoji mesa-vulkan-drivers xwayland network-manager libpam-systemd dbus" \
   > config/package-lists/os.list.chroot
 # the shell lives here -> edit shell/index.html, rebuild, done

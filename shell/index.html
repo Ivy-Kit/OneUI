@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>OneShell</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--accent:#3e91ff;--r:22px;--bg:#f2f2f7;--panel:rgba(246,246,250,.86);--card:#fff;--txt:#111;--sub:#6b6b73;--line:rgba(0,0,0,.08)}
+.dark{--bg:#000;--panel:rgba(30,30,34,.86);--card:#1c1c1e;--txt:#f4f4f6;--sub:#9a9aa2;--line:rgba(255,255,255,.12)}
+*{box-sizing:border-box;margin:0;user-select:none;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;overflow:hidden;font-family:"Samsung Sans","SamsungOne",Roboto,"Segoe UI",system-ui,sans-serif;color:var(--txt)}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+#phone{position:absolute;left:50%;top:50%;width:400px;height:866px;transform-origin:center;overflow:hidden;background:var(--bg);border-radius:44px}
+.L{position:absolute;inset:0}
+#wall{background-size:cover;background-position:center}
+#sb{position:absolute;top:0;left:0;right:0;height:36px;z-index:60;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:14px;font-weight:600;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.3)}
+.inapp #sb{color:var(--txt);text-shadow:none}
+#home{padding:50px 18px 0}
+.wd{height:150px;border-radius:32px;background:var(--panel);backdrop-filter:blur(24px);padding:22px 26px;margin-bottom:24px}
+.wd b{font-size:54px;font-weight:300;display:block;line-height:1;color:var(--txt)}.wd span{color:var(--sub);font-size:15px}
+.g{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 8px}
+.app{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12px;color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.4)}
+.ic{width:60px;height:60px;border-radius:var(--r);display:grid;place-items:center;font-size:29px;color:#fff;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.app:active .ic{transform:scale(.92)}
+#dock{position:absolute;left:14px;right:14px;bottom:62px;height:86px;border-radius:34px;background:var(--panel);backdrop-filter:blur(24px);display:flex;justify-content:space-around;align-items:center;z-index:5}
+#dock .app{color:var(--txt);text-shadow:none}#dock .app span{display:none}
+#srch{position:absolute;left:60px;right:60px;bottom:158px;height:38px;border-radius:19px;background:rgba(255,255,255,.28);backdrop-filter:blur(14px);color:#fff;display:grid;place-items:center;font-size:14px}
+#nav{position:absolute;left:0;right:0;bottom:0;height:52px;z-index:70;display:flex;justify-content:space-around;align-items:center;font-size:20px;color:#fff;text-shadow:0 1px 5px rgba(0,0,0,.4)}
+.inapp #nav{color:var(--txt);text-shadow:none}.nb{width:80px;height:46px}
+.pg{position:absolute;inset:0;background:var(--bg);z-index:30;padding-bottom:52px;display:flex;flex-direction:column;border-radius:44px;animation:op .25s cubic-bezier(.2,.9,.3,1)}
+@keyframes op{from{transform:scale(.6);opacity:0}}
+.pg .body{flex:1;overflow:auto;padding-top:36px}
+#drawer{background:var(--panel);backdrop-filter:blur(40px);z-index:20;padding:60px 18px 0;transform:translateY(100%);transition:transform .3s cubic-bezier(.2,.9,.3,1);display:flex;flex-direction:column;gap:18px}
+#drawer.on{transform:none}#drawer .app{color:var(--txt);text-shadow:none}
+#q{height:44px;border-radius:22px;border:0;background:var(--line);padding:0 20px;font:inherit;font-size:15px;color:var(--txt);outline:0;user-select:text}
+#shade{background:var(--panel);backdrop-filter:blur(40px);z-index:80;padding:50px 16px 16px;transform:translateY(-102%);transition:transform .3s cubic-bezier(.2,.9,.3,1);bottom:auto;border-radius:0 0 34px 34px}
+#shade.on{transform:none}
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.tgb{height:76px;border-radius:26px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px}
+.tgb.on{background:var(--accent);color:#fff}.tgb span{font-size:20px}
+.sl{margin:16px 2px;display:flex;gap:10px;align-items:center}.sl input{flex:1;accent-color:var(--accent)}
+.nt{background:var(--card);border-radius:24px;padding:14px 18px;font-size:14px}.nt small{color:var(--sub);display:block;margin-bottom:3px}
+#lock{z-index:90;color:#fff;text-align:center;text-shadow:0 2px 14px rgba(0,0,0,.3);transition:transform .45s cubic-bezier(.3,.9,.3,1),opacity .45s;background:inherit}
+#lock.off{transform:translateY(-100%);opacity:0;pointer-events:none}
+#lock .t{font-size:92px;font-weight:300;margin-top:110px;line-height:1}#lock .d{font-size:17px;margin-top:8px}#lock .h{position:absolute;bottom:40px;width:100%;font-size:14px;opacity:.9}
+#rec{z-index:40;background:var(--panel);backdrop-filter:blur(40px);display:none;align-items:center;gap:16px;padding:0 40px;overflow-x:auto}
+#rec.on{display:flex}.rc{flex:none;width:210px;height:420px;border-radius:30px;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-size:16px;position:relative}.rc .ic{width:84px;height:84px;font-size:42px}
+.rc i{position:absolute;top:12px;right:16px;font-style:normal;color:var(--sub)}
+.set h1{font-size:34px;font-weight:600;padding:60px 24px 20px}
+.grp{background:var(--card);border-radius:26px;margin:0 14px 12px;overflow:hidden}
+.row{display:flex;align-items:center;gap:12px;padding:14px 18px;font-size:16px;border-bottom:1px solid var(--line)}.row:last-child{border:0}.row>div:first-child{flex:1}.row small{display:block;color:var(--sub);font-size:12px}
+.row input[type=color]{width:40px;height:30px;border:0;background:none}.row input[type=text]{width:100%;background:var(--line);border:0;border-radius:12px;padding:9px 12px;color:var(--txt);font:inherit;font-size:13px;user-select:text}
+.sw{width:50px;height:30px;border-radius:15px;background:#8e8e93;position:relative;flex:none}.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.sw.on{background:var(--accent)}.sw.on::after{left:23px}
+.calc{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px;grid-auto-rows:62px}.calc .o{grid-column:1/5;grid-row:span 2;text-align:right;font-size:50px;font-weight:300;padding:14px;overflow:hidden;align-self:end}
+.calc button{border-radius:50%;background:var(--card);font-size:22px}.calc .op{background:var(--accent);color:#fff}
+textarea.note{width:100%;height:100%;border:0;background:var(--card);padding:20px;font:inherit;font-size:17px;color:var(--txt);outline:0;resize:none;user-select:text}
+.ph{display:grid;place-items:center;height:100%;color:var(--sub);text-align:center;padding:30px}
+</style></head><body>
+<div id="phone">
+ <div class="L" id="wall"></div>
+ <div class="L" id="home"><div class="wd"><b id="wt"></b><span id="wdate"></span></div><div class="g" id="hg"></div></div>
+ <div id="srch">🔍 Search</div><div id="dock"></div>
+ <div class="L" id="drawer"><input id="q" placeholder="Search apps"><div class="g" id="dg" style="overflow:auto"></div></div>
+ <div class="L" id="rec"></div>
+ <div class="L" id="shade"><div class="tg" id="tg"></div><div class="sl">☀️<input type="range" min="30" max="100" value="100" oninput="phone.style.filter='brightness('+this.value+'%)'"></div><div class="nt"><small>OneShell</small>Welcome. Swipe up to close.</div></div>
+ <div id="sb"><span id="tc"></span><span>📶 🔋 100%</span></div>
+ <div id="nav"><button class="nb" id="bR">▮▮▮</button><button class="nb" id="bH">◯</button><button class="nb" id="bB">❮</button></div>
+ <div class="L" id="lock"><div class="t" id="lt"></div><div class="d" id="ld"></div><div class="h">Swipe up or tap to unlock</div></div>
+</div>
+<script>
+/* ============ EDIT HERE: CONFIG (safe to change; Settings app edits override these) ============ */
+const CONFIG={
+  osName:"OneShell", user:"You", accent:"#3e91ff", dark:false, radius:22, clock24:false,
+  wallpaper:"linear-gradient(170deg,#79b6ff 0%,#8d7bff 50%,#ff9ad0 100%)", // CSS background or url(...)
+  dock:["phone","messages","browser","settings"],
+  // apps: {id,name,icon(emoji),color,type:"settings|calc|notes|clock|web|blank",url}
+  apps:[
+    {id:"phone",name:"Phone",icon:"📞",color:"#34c759"},
+    {id:"messages",name:"Messages",icon:"💬",color:"#30b0c7"},
+    {id:"browser",name:"Internet",icon:"🌐",color:"#7c5cff",type:"web",url:"https://duckduckgo.com"},
+    {id:"gallery",name:"Gallery",icon:"🖼️",color:"#ff6b9a"},
+    {id:"camera",name:"Camera",icon:"📷",color:"#4a4f5c"},
+    {id:"notes",name:"Notes",icon:"📝",color:"#ffb020",type:"notes"},
+    {id:"calc",name:"Calculator",icon:"🧮",color:"#5b6270",type:"calc"},
+    {id:"clock",name:"Clock",icon:"⏰",color:"#ff7a45",type:"clock"},
+    {id:"files",name:"My Files",icon:"📁",color:"#f5a623"},
+    {id:"settings",name:"Settings",icon:"⚙️",color:"#8e8e93",type:"settings"}
+  ]
+};
+/* ============ APP TYPES: add your own renderer ============ */
+const TYPES={
+  settings(b){const S=state;b.classList.add("set");
+    b.innerHTML=`<h1>Settings</h1><div class="grp"><div class="row"><div>${S.user}<small>${S.osName} account</small></div></div></div>
+    <div class="grp"><div class="row"><div>Dark mode</div><div class="sw ${S.dark?"on":""}" data-k="dark"></div></div>
+    <div class="row"><div>Accent color</div><input type="color" data-k="accent" value="${S.accent}"></div>
+    <div class="row"><div>Icon roundness</div><input type="range" min="4" max="30" data-k="radius" value="${S.radius}"></div>
+    <div class="row"><div>24-hour clock</div><div class="sw ${S.clock24?"on":""}" data-k="clock24"></div></div></div>
+    <div class="grp"><div class="row"><div>Wallpaper<small>CSS gradient or url(...)</small></div></div><div class="row"><input type="text" data-k="wallpaper" value="${S.wallpaper.replace(/"/g,'&quot;')}"></div></div>
+    <div class="grp"><div class="row"><div>Device name</div><input type="text" style="width:150px" data-k="osName" value="${S.osName}"></div>
+    <div class="row"><div id="rs" style="color:#ff4d4f">Reset to defaults</div></div></div>`;
+    b.oninput=e=>{const k=e.target.dataset.k;if(k&&!e.target.classList.contains("sw"))set(k,e.target.type=="range"?+e.target.value:e.target.value)};
+    b.onclick=e=>{const t=e.target;if(t.classList.contains("sw")){set(t.dataset.k,!state[t.dataset.k]);t.classList.toggle("on")}if(t.id=="rs"){localStorage.removeItem("oneshell");location.reload()}}},
+  calc(b){let v="";const k="C ± % ÷ 7 8 9 × 4 5 6 − 1 2 3 + 0 . ⌫ =".split(" ");
+    b.innerHTML=`<div class="calc"><div class="o">0</div>${k.map(x=>`<button class="${"÷×−+=".includes(x)?"op":""}">${x}</button>`).join("")}</div>`;
+    const o=b.querySelector(".o");b.onclick=e=>{if(e.target.tagName!="BUTTON")return;const x=e.target.textContent;
+      if(x=="C")v="";else if(x=="⌫")v=v.slice(0,-1);else if(x=="="){try{v=String(+eval(v.replace(/÷/g,"/").replace(/×/g,"*").replace(/−/g,"-").replace(/%/g,"/100")).toFixed(8))}catch{v=""}}else if(x!="±")v+=x;o.textContent=v||"0"}},
+  notes(b){const t=document.createElement("textarea");t.className="note";t.placeholder="Write something…";t.value=localStorage.getItem("os_note")||"";t.oninput=()=>localStorage.setItem("os_note",t.value);b.append(t)},
+  clock(b){b.innerHTML='<div class="ph"><div id="bc" style="font-size:56px;font-weight:300;color:var(--txt)"></div></div>';const u=()=>{const e=b.querySelector("#bc");e&&(e.textContent=fmt(new Date(),1))};u();const i=setInterval(()=>b.isConnected?u():clearInterval(i),1000)},
+  web(b,a){b.innerHTML=`<iframe src="${a.url}" style="width:100%;height:100%;border:0;background:#fff"></iframe>`},
+  blank(b,a){b.innerHTML=`<div class="ph"><div><div style="font-size:60px">${a.icon}</div><h2 style="color:var(--txt);margin:10px 0">${a.name}</h2>Empty app. Set a <code>type</code> in CONFIG or add a renderer to TYPES.</div></div>`}
+};
+/* ============ CORE ============ */
+let state={...CONFIG,...JSON.parse(localStorage.getItem("oneshell")||"{}")};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],root=document.documentElement;
+function set(k,v){state[k]=v;const d={};for(const x of["dark","accent","radius","clock24","wallpaper","osName"])d[x]=state[x];localStorage.setItem("oneshell",JSON.stringify(d));apply()}
+function apply(){root.style.setProperty("--accent",state.accent);root.style.setProperty("--r",state.radius+"px");root.classList.toggle("dark",!!state.dark);$("#wall").style.background=state.wallpaper;$("#wall").style.backgroundSize="cover";$("#lock").style.background=state.wallpaper;document.title=state.osName;tick();$("#tg")&&tgRender()}
+function fit(){const s=Math.min(innerWidth/400,innerHeight/866);phone.style.transform=`translate(-50%,-50%) scale(${s})`;phone.style.borderRadius=s>1.01||innerWidth>innerHeight*.6?"44px":"0"}addEventListener("resize",fit);
+function fmt(d,s){return d.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",...(s?{second:"2-digit"}:{}),hour12:!state.clock24}).replace(/^0/,"")}
+function tick(){const d=new Date(),t=fmt(d),dd=d.toLocaleDateString([],{weekday:"long",month:"long",day:"numeric"});lt.textContent=wt.textContent=tc.textContent=t;ld.textContent=wdate.textContent=dd}setInterval(tick,1000);
+const A=id=>state.apps.find(a=>a.id==id),btn=a=>`<button class="app" data-id="${a.id}"><div class="ic" style="background:${a.color}">${a.icon}</div><span>${a.name}</span></button>`;
+function render(f=""){hg.innerHTML=state.apps.map(btn).join("");dg.innerHTML=state.apps.filter(a=>a.name.toLowerCase().includes(f)).map(btn).join("");dock.innerHTML=state.dock.map(A).filter(Boolean).map(btn).join("")}
+const wins=[];let cur=null;
+function open(id){const a=A(id);if(!a)return;closeOv();let p=wins.find(w=>w.id==id);
+  if(!p){const e=document.createElement("div");e.className="pg";e.innerHTML='<div class="body"></div>';phone.insertBefore(e,sb);(TYPES[a.type]||TYPES.blank)(e.querySelector(".body"),a);p={id,e};wins.push(p)}
+  wins.forEach(w=>w.e.style.display="none");p.e.style.display="flex";cur=p;phone.classList.add("inapp")}
+function home(){closeOv();wins.forEach(w=>w.e.style.display="none");cur=null;phone.classList.remove("inapp")}
+function closeOv(){drawer.classList.remove("on");shade.classList.remove("on");rec.classList.remove("on")}
+document.addEventListener("click",e=>{const b=e.target.closest(".app");if(b)open(b.dataset.id)});
+bH.onclick=()=>home();bB.onclick=()=>cur?home():closeOv();
+bR.onclick=()=>{const on=rec.classList.contains("on");closeOv();if(on)return;rec.innerHTML=wins.length?wins.map(w=>{const a=A(w.id);return`<div class="rc" data-o="${w.id}"><i data-x="${w.id}">✕</i><div class="ic" style="background:${a.color}">${a.icon}</div>${a.name}</div>`}).join(""):'<div style="color:var(--sub);width:100%;text-align:center">No recent apps</div>';rec.classList.add("on")};
+rec.onclick=e=>{const x=e.target.dataset.x,o=e.target.closest("[data-o]");if(x){const i=wins.findIndex(w=>w.id==x);wins[i].e.remove();wins.splice(i,1);if(cur&&cur.id==x)cur=null;bR.click();bR.click()}else if(o)open(o.dataset.o);else closeOv()};
+q.oninput=e=>render(e.target.value.toLowerCase());
+const toggles=[["📶","Wi-Fi",1],["🔵","Bluetooth",1],["🔕","Sound",0],["✈️","Airplane",0],["🌙","Dark mode",0],["🔦","Torch",0],["📍","Location",1],["🔄","Rotate",0]];
+function tgRender(){tg.innerHTML=toggles.map((t,i)=>{if(t[1]=="Dark mode")t[2]=state.dark;return`<button class="tgb ${t[2]?"on":""}" data-i="${i}"><span>${t[0]}</span>${t[1]}</button>`}).join("")}
+tg.onclick=e=>{const b=e.target.closest(".tgb");if(!b)return;const t=toggles[b.dataset.i];t[1]=="Dark mode"?set("dark",!state.dark):(t[2]=!t[2],tgRender())};
+/* swipe gestures (mouse or touch) */
+let sx,sy,sz;phone.onpointerdown=e=>{const r=phone.getBoundingClientRect(),k=r.height/866;sx=e.clientX;sy=e.clientY;sz=(e.clientY-r.top)/k};
+phone.onpointerup=e=>{if(sy==null)return;const r=phone.getBoundingClientRect(),k=r.height/866,dy=(e.clientY-sy)/k,dx=(e.clientX-sx)/k;sy=null;if(Math.abs(dy)<40||Math.abs(dx)>Math.abs(dy))return;
+  if(!lock.classList.contains("off")){if(dy<0)lock.classList.add("off");return}
+  if(dy>0&&sz<60){closeOv();shade.classList.add("on")}
+  else if(dy<0&&shade.classList.contains("on"))shade.classList.remove("on");
+  else if(dy<0&&sz>800&&cur)home();
+  else if(dy<0&&!cur&&!drawer.classList.contains("on")&&sz>300)drawer.classList.add("on");
+  else if(dy>0&&drawer.classList.contains("on")&&drawer.querySelector(".g").scrollTop<5)drawer.classList.remove("on")};
+lock.onclick=()=>lock.classList.add("off");
+addEventListener("keydown",e=>{lock.classList.add("off");if(e.key=="Escape")home()});
+apply();render();fit();
+</script></body></html>
